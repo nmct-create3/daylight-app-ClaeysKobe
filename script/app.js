@@ -27,18 +27,26 @@ const getTotalMinutes = function(time1, time2) {
 // 5 TODO: maak updateSun functie
 
 const updateSun = function(percentage, sunElement) {
-	percentage = 0;
+	// percentage = 0;
+	let now = new Date();
+	now = _parseMillisecondsIntoReadableTime(now);
+	sunElement.setAttribute('data-time', now) 
 	let bottomPercentage;
-	if (percentage < 50) { 
-		bottomPercentage = 50 - percentage;
-	} else { 
-		bottomPercentage = percentage + 50;
+	if (percentage > 50) {
+		bottomPercentage = (100 - percentage) * 2;
+	} else {
+		bottomPercentage = percentage * 2;
 	}
 	bottomPercentage = Math.round(bottomPercentage);
 	bottomPercentage = parseInt(bottomPercentage);
 	console.log(bottomPercentage);
 	sunElement.setAttribute('style', `left: ${percentage}%; bottom: ${bottomPercentage}%;`);
-
+	// Set Night mode if sun is down
+	if (percentage > 100 || percentage < 0) {
+		document.querySelector('.is-day').classList.add('is-night');
+	} else {
+		document.querySelector('.is-day').classList.remove('is-night');
+	}
 }
 
 // 4 Zet de zon op de juiste plaats en zorg ervoor dat dit iedere minuut gebeurt.
