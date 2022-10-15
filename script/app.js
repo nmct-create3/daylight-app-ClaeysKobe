@@ -6,7 +6,7 @@ const getData = (endpoint) => {
 // _ = helper functions
 function _parseMillisecondsIntoReadableTime(timestamp) {
 	//Get hours from milliseconds
-	const date = new Date(timestamp * 1000);
+	const date = new Date(timestamp);
 	// Hours part from the timestamp
 	const hours = '0' + date.getHours();
 	// Minutes part from the timestamp
@@ -29,7 +29,9 @@ const getTotalMinutes = function(time1, time2) {
 const updateSun = function(percentage, sunElement) {
 	// percentage = 0;
 	let now = new Date();
+	console.log(now);
 	now = _parseMillisecondsIntoReadableTime(now);
+	console.log(now);
 	sunElement.setAttribute('data-time', now) 
 	let bottomPercentage;
 	if (percentage > 50) {
@@ -68,10 +70,22 @@ let placeSunAndStartMoving = (totalMinutes, sunrise) => {
 	// console.log(percentage);
 	updateSun(percentage, sunElement);
 	// We voegen ook de 'is-loaded' class toe aan de body-tag.
+	document.querySelector('body').classList.add('is-loaded');
 	// Vergeet niet om het resterende aantal minuten in te vullen.
 	// Nu maken we een functie die de zon elke minuut zal updaten
+	const interval = setInterval(() => {
+		// We halen opnieuw het aantal minuten op dat de zon al op is.
+		// We voeren de updateSun functie uit met de juiste parameters.
+		let percentage = (upTimeMinutes / totalMinutes) * 100;
+		percentage = Math.round(percentage);
+		updateSun(percentage, sunElement);
+		// Als de zon onder is gaan we de interval clearen.
+		if (minutesSunUp >= totalMinutes) {
+		  clearInterval(interval);
+		}
+	  }, 60000);
 	// Bekijk of de zon niet nog onder of reeds onder is
-	// Anders kunnen we huidige waarden evalueren en de zon updaten via de updateSun functie.
+  	// Anders kunnen we huidige waarden evalueren en de zon updaten via de updateSun functie
 	// PS.: vergeet weer niet om het resterend aantal minuten te updaten en verhoog het aantal verstreken minuten.
 };
 
